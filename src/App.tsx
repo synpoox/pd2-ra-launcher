@@ -6,6 +6,7 @@ import { TitleBar } from "./components/TitleBar";
 import { MantineProvider } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import SettingsModal from "./components/SettingsModal";
+import Play from "./components/Play";
 
 function App() {
   const [opened, { open, close }] = useDisclosure(false);
@@ -40,14 +41,7 @@ function App() {
           <TitleBar open={open} />
           <div className="flex-grow" />
           <div className="flex justify-end items-end px-12 py-14">
-            <button className="group relative w-60 px-5 py-4 rounded-sm shadow bg-black/20 active:bg-black/60 cursor-pointer transition-all duration-200 ease-in-out hover:bg-white/20">
-              {/* Simulated border using a pseudo-element */}
-              <span className="absolute inset-0 rounded-sm border border-gray-100/20 transition-all duration-200 ease-in-out group-hover:inset-[4px] pointer-events-none"></span>
-
-              <p className="relative z-10 text-2xl font-semibold text-white">
-                Play
-              </p>
-            </button>
+            <Play />
           </div>
         </div>
       </div>

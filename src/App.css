@@ -17,7 +17,7 @@ html, body, #root {
     transform: scale(1.05);
   }
   50% {
-    transform: scale(1.12);
+    transform: scale(1.16);
   }
   100% {
     transform: scale(1.05);
