@@ -2,7 +2,9 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "Main capability",
-  "windows": ["main"],
+  "windows": [
+    "main"
+  ],
   "permissions": [
     "core:default",
     "core:window:allow-start-dragging",
@@ -32,17 +34,18 @@
     "shell:allow-spawn",
     {
       "identifier": "fs:scope",
-      "allow": [{ "path": "E:\\Program Files (x86)\\PD2-Reawakening-S10-Patch2\\ProjectD2" }, {"path": "E:\\Program Files (x86)\\PD2-Reawakening-S10-Patch2\\ProjectD2\\PlugY.exe"}]
+      "allow": [{ "path": "**/*" }]
     },
-        {
+    {
       "identifier": "shell:allow-spawn",
       "allow": [
         {
-          "name": "E:\\Program Files (x86)\\PD2-Reawakening-S10-Patch2\\ProjectD2\\PlugY.exe",
-          "cmd": "sh",
+          "name": "cmd",
+          "cmd": "cmd",
           "args": true
         }
       ]
-    }
+    },
+    "upload:default"
   ]
 }

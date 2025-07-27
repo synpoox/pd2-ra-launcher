@@ -11,6 +11,7 @@ import { useSettings } from "../hooks/useSettings";
 import AboutTab from "./AboutTab";
 import PreferencesTab from "./PreferencesTab";
 import Button from "./Button";
+import GameTab from "./GameTab";
 
 type SettingsModalType = {
   opened: boolean;
@@ -119,27 +120,7 @@ function SettingsModal({ opened, close }: SettingsModalType) {
           {/* Tab Content */}
           <div className="flex-1 overflow-y-auto p-8">
             {activeTab === "Preferences" && settings && <PreferencesTab />}
-            {activeTab === "Game" && settings && (
-              <label className="block">
-                Density Multiplier
-                <input
-                  type="number"
-                  step="0.1"
-                  min="0"
-                  className="input-class"
-                  value={settings.game.densityMultiplier}
-                  onChange={(e) =>
-                    setSettings({
-                      ...settings,
-                      game: {
-                        ...settings.game,
-                        densityMultiplier: Number(e.target.value),
-                      },
-                    })
-                  }
-                />
-              </label>
-            )}
+            {activeTab === "Game" && settings && <GameTab />}
             {activeTab === "About" && settings && <AboutTab />}
           </div>
         </div>

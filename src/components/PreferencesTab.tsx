@@ -7,8 +7,8 @@ import Button from "./Button";
 function PreferencesTab() {
   const { settings, setSettings } = useSettings();
 
-  const gameDir = settings?.preferences?.gameDirectory ?? "";
-  const saveDir = settings?.preferences?.saveDirectory ?? "";
+  const gameDir = settings.preferences.gameDirectory;
+  const saveDir = settings.preferences.saveDirectory;
 
   const handleOpenDirectory = async (dir: string) => {
     if (dir) {
@@ -65,7 +65,7 @@ function PreferencesTab() {
 
         <Group gap="sm">
           <Button
-            disabled={settings?.preferences?.gameDirectory === ""}
+            disabled={settings.preferences.gameDirectory === ""}
             onClick={() => handleOpenDirectory(gameDir)}
           >
             Open directory
@@ -95,22 +95,22 @@ function PreferencesTab() {
         <Group gap="sm">
           <Button
             disabled={
-              settings?.preferences?.gameDirectory === "" ||
-              settings?.preferences?.saveDirectory === ""
+              settings.preferences.gameDirectory === "" ||
+              settings.preferences.saveDirectory === ""
             }
             onClick={() => handleOpenDirectory(saveDir)}
           >
             Open directory
           </Button>
           <Button
-            disabled={settings?.preferences?.gameDirectory === ""}
+            disabled={settings.preferences.gameDirectory === ""}
             color="white"
             onClick={handleChangeSaveDirectory}
           >
             Change directory
           </Button>
         </Group>
-        {settings?.preferences?.gameDirectory === "" ? (
+        {settings.preferences.gameDirectory === "" ? (
           <p className="text-white/80">
             Please select your Project Diablo II installation directory before
             setting your Save Folder directory.
