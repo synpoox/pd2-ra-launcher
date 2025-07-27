@@ -1,6 +1,6 @@
 import { exists, readFile } from "@tauri-apps/plugin-fs";
 import { download } from "@tauri-apps/plugin-upload";
-import { Settings } from "../types/settings";
+import { LauncherSettings } from "../types/settings";
 
 export type SyncEntry = {
   filename: string;
@@ -55,7 +55,7 @@ export async function syncSingleFile(
 
 export async function syncAllFromSettings(
   manifestUrl: string,
-  settings: Settings
+  settings: LauncherSettings
 ) {
   const gameDir = settings.preferences.gameDirectory;
   if (!gameDir) {

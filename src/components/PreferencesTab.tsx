@@ -3,9 +3,30 @@ import { openPath } from "@tauri-apps/plugin-opener";
 import { open } from "@tauri-apps/plugin-dialog";
 import { useSettings } from "../hooks/useSettings"; // Adjust path as needed
 import Button from "./Button";
+import { join } from "@tauri-apps/api/path";
+import { syncSavePathToGameSettings } from "../util/syncSavePath";
+import { useEffect } from "react";
 
 function PreferencesTab() {
   const { settings, setSettings } = useSettings();
+
+  useEffect(() => {
+    const trySyncSavePath = async () => {
+      const { gameDirectory, saveDirectory } = settings.preferences;
+
+      // Only attempt if both are valid
+      if (!gameDirectory || !saveDirectory) return;
+
+      const pd2JsonPath = await join(gameDirectory, "ProjectDiablo.json");
+      const updated = await syncSavePathToGameSettings(settings, pd2JsonPath);
+
+      if (updated) {
+        console.log("✅ save_path synced after saveDirectory change");
+      }
+    };
+
+    trySyncSavePath();
+  }, [settings.preferences.saveDirectory, settings.preferences.gameDirectory]);
 
   const gameDir = settings.preferences.gameDirectory;
   const saveDir = settings.preferences.saveDirectory;

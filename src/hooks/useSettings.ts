@@ -4,7 +4,9 @@ import {
   loadSettings,
   saveSettings,
 } from "../util/settings";
-import { Settings } from "../types/settings";
+import { LauncherSettings } from "../types/settings";
+import { syncSavePathToGameSettings } from "../util/syncSavePath";
+import { join } from "@tauri-apps/api/path";
 
 // ✅ Vanilla debounce helper
 function debounce<T extends (...args: any[]) => void>(fn: T, wait: number) {
@@ -16,7 +18,7 @@ function debounce<T extends (...args: any[]) => void>(fn: T, wait: number) {
 }
 
 // ✅ Default settings fallback
-const defaultSettings: Settings = {
+const defaultSettings: LauncherSettings = {
   preferences: {
     gameDirectory: "",
     saveDirectory: "",
@@ -31,11 +33,11 @@ const defaultSettings: Settings = {
 };
 
 export function useSettings() {
-  const [settings, setSettings] = useState<Settings>(defaultSettings);
+  const [settings, setSettings] = useState<LauncherSettings>(defaultSettings);
   const [loaded, setLoaded] = useState(false);
 
   const debouncedSave = useCallback(
-    debounce((next: Settings) => {
+    debounce((next: LauncherSettings) => {
       saveSettings(next).catch(console.error);
     }, 300),
     []
@@ -47,6 +49,14 @@ export function useSettings() {
       await ensureSettingsFile();
       const loaded = await loadSettings();
 
+      const pd2JsonPath = await join(
+        loaded.preferences.gameDirectory,
+        "ProjectDiablo.json"
+      );
+      const updated = await syncSavePathToGameSettings(loaded, pd2JsonPath);
+      if (updated) {
+        console.log("ProjectDiablo.json was synced successfully.");
+      }
       // Merge defaults in case file is missing fields
       setSettings({ ...defaultSettings, ...loaded });
       setLoaded(true);

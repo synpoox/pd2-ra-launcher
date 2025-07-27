@@ -1,11 +1,11 @@
 import { mkdir, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { exists, BaseDirectory } from "@tauri-apps/plugin-fs";
 import { appConfigDir, join } from "@tauri-apps/api/path";
-import { Settings } from "../types/settings";
+import { LauncherSettings } from "../types/settings";
 
 const FILENAME = "settings.json";
 
-const defaultSettings: Settings = {
+const defaultSettings: LauncherSettings = {
   preferences: {
     gameDirectory: "",
     saveDirectory: "",
@@ -47,14 +47,14 @@ export async function ensureSettingsFile(): Promise<void> {
   }
 }
 
-export async function loadSettings(): Promise<Settings> {
+export async function loadSettings(): Promise<LauncherSettings> {
   const content = await readTextFile(FILENAME, {
     baseDir: BaseDirectory.AppConfig,
   });
-  return JSON.parse(content) as Settings;
+  return JSON.parse(content) as LauncherSettings;
 }
 
-export async function saveSettings(settings: Settings): Promise<void> {
+export async function saveSettings(settings: LauncherSettings): Promise<void> {
   await writeTextFile(FILENAME, JSON.stringify(settings, null, 2), {
     baseDir: BaseDirectory.AppConfig,
   });
