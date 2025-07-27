@@ -6,6 +6,7 @@ import Button from "./Button";
 import { join } from "@tauri-apps/api/path";
 import { syncSavePathToGameSettings } from "../util/syncSavePath";
 import { useEffect } from "react";
+import { LauncherSettings } from "../types/settings";
 
 function PreferencesTab() {
   const { settings, setSettings } = useSettings();
@@ -37,7 +38,9 @@ function PreferencesTab() {
     }
   };
 
-  const handleChangePd2Directory = async () => {
+  const handleChangeDirectory = async (
+    key: keyof LauncherSettings["preferences"]
+  ) => {
     const selected = await open({
       directory: true,
       multiple: false,
@@ -48,24 +51,7 @@ function PreferencesTab() {
         ...prev,
         preferences: {
           ...prev.preferences,
-          gameDirectory: selected,
-        },
-      }));
-    }
-  };
-
-  const handleChangeSaveDirectory = async () => {
-    const selected = await open({
-      directory: true,
-      multiple: false,
-    });
-
-    if (typeof selected === "string") {
-      setSettings((prev) => ({
-        ...prev,
-        preferences: {
-          ...prev.preferences,
-          saveDirectory: selected,
+          [key]: selected,
         },
       }));
     }
@@ -91,7 +77,10 @@ function PreferencesTab() {
           >
             Open directory
           </Button>
-          <Button color="white" onClick={handleChangePd2Directory}>
+          <Button
+            color="white"
+            onClick={() => handleChangeDirectory("gameDirectory")}
+          >
             Change directory
           </Button>
         </Group>
@@ -126,7 +115,7 @@ function PreferencesTab() {
           <Button
             disabled={settings.preferences.gameDirectory === ""}
             color="white"
-            onClick={handleChangeSaveDirectory}
+            onClick={() => handleChangeDirectory("saveDirectory")}
           >
             Change directory
           </Button>
