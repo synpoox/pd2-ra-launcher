@@ -58,6 +58,7 @@ export async function syncAllFromSettings(
   settings: LauncherSettings
 ) {
   const gameDir = settings.preferences.gameDirectory;
+  const density = settings.game.densityMultiplier;
   if (!gameDir) {
     console.warn("No gameDirectory is set in settings");
     return;
@@ -65,7 +66,38 @@ export async function syncAllFromSettings(
 
   const manifest = await fetchSyncManifest(manifestUrl);
 
+  // Try to find the specific density mpq
+  const densityEntry = manifest.find(
+    (entry) => entry.filename === `pd2data-${density}x-density.mpq`
+  );
+
+  if (densityEntry) {
+    console.log(
+      `[sync] 📦 Found density-matched file: pd2data-${density}x-density.mpq -> syncing as pd2data.mpq`
+    );
+    await syncSingleFile({ ...densityEntry, filename: "pd2data.mpq" }, gameDir);
+  } else {
+    // Fallback to default
+    const fallbackEntry = manifest.find(
+      (entry) => entry.filename === "pd2data.mpq"
+    );
+
+    if (fallbackEntry) {
+      console.warn(
+        `[sync] ⚠️ No density match for ${density}x — falling back to default pd2data.mpq`
+      );
+      await syncSingleFile(fallbackEntry, gameDir);
+    } else {
+      console.error(
+        `[sync] ❌ No fallback pd2data.mpq found in manifest — nothing synced.`
+      );
+    }
+  }
+
+  // Sync the rest of the files except any pd2data-* entries (already handled above)
   for (const entry of manifest) {
+    if (entry.filename.startsWith("pd2data")) continue;
+
     try {
       await syncSingleFile(entry, gameDir);
     } catch (err) {
