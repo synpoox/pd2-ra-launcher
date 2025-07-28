@@ -7,9 +7,19 @@ import { MantineProvider } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import SettingsModal from "./components/SettingsModal";
 import Play from "./components/Play";
+import { useAutoUpdater } from "./hooks/useAutoUpdater";
+import { useEffect } from "react";
 
 function App() {
+  const { status, updateInfo, installUpdate } = useAutoUpdater();
   const [opened, { open, close }] = useDisclosure(false);
+
+  useEffect(() => {
+    if (status === "available" && updateInfo) {
+      // Automatically download + install the update
+      installUpdate();
+    }
+  }, [status, updateInfo, installUpdate]);
 
   return (
     <MantineProvider>
