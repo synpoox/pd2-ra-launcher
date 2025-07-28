@@ -82,8 +82,8 @@ function Play() {
         className={`group relative w-60 px-5 py-4 rounded-sm shadow transition-all duration-200 ease-in-out
           ${
             isBusy
-              ? "bg-black/40 text-gray-400 cursor-not-allowed"
-              : "bg-black/20 hover:bg-white/20 text-white cursor-pointer"
+              ? "bg-black/50 text-gray-400 cursor-not-allowed"
+              : "bg-black/30 hover:bg-white/20 text-white hover:text-black/60 active:bg-black/60 active:text-white cursor-pointer"
           }
         `}
       >

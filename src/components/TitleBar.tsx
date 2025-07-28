@@ -29,7 +29,7 @@ export function TitleBar({ open }: TitleBarType) {
 
   return (
     <div
-      className="w-full h-20 flex justify-between items-center text-white select-none"
+      className="w-full h-24 flex justify-between items-center text-white select-none"
       data-tauri-drag-region
     >
       {/* Left group of buttons */}
@@ -53,7 +53,11 @@ export function TitleBar({ open }: TitleBarType) {
           <IconBrandPatreonFilled size={24} />
         </button>
         <button
-          onClick={() => openPath("https://pd2reawakening.com/wiki/index.php?title=Main_Page")}
+          onClick={() =>
+            openPath(
+              "https://pd2reawakening.com/wiki/index.php?title=Main_Page"
+            )
+          }
           className={iconClass}
         >
           <IconBrandWikipedia size={24} />

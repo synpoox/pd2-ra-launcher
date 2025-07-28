@@ -38,9 +38,11 @@ function App() {
         <div className="absolute inset-0 overflow-hidden z-0">
           {/* Zoomed + Animated Background */}
           <div
-            className="w-full h-full bg-cover bg-center bg-no-repeat animate-pulse-slow"
+            className="w-full h-full bg-cover animate-pulse-slow"
             style={{
               backgroundImage: "url('/background.jpg')",
+              backgroundPosition: "top right",
+              backgroundSize: "auto 142%",
             }}
           />
 
@@ -49,17 +51,33 @@ function App() {
             className="absolute inset-0 pointer-events-none"
             style={{
               background:
-                "radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.5) 100%)",
+                "radial-gradient(ellipse at center, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.5) 100%)",
               mixBlendMode: "multiply",
             }}
           />
         </div>
 
-        <div className="absolute inset-0 bg-black/10 z-10" />
+        {/* <div className="absolute inset-0 bg-black/10 z-10" /> */}
         <div className="relative z-20 flex flex-col w-full h-full">
           <TitleBar open={open} />
+          {/* Logo at the top center */}
+          <div className="flex justify-center -mt-16 pointer-events-none drop-shadow-xl">
+            <img
+              src="/logo.gif"
+              alt="App Logo"
+              className="h-20 drop-shadow-lg select-none pointer-events-none"
+              draggable={false}
+            />
+          </div>
           <div className="flex-grow" />
-          <div className="flex justify-end items-end px-12 py-14">
+          <div className="flex flex-col items-end justify-end px-12 py-14">
+            <div className="-mb-30 -mr-2">
+              <img
+                src="/reawakening-logo.png"
+                alt="Reawakening Logo"
+                className="w-100 h-auto drop-shadow-xl pointer-events-none select-none"
+              />
+            </div>
             <Play />
           </div>
         </div>
