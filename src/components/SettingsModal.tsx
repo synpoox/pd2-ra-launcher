@@ -29,7 +29,7 @@ const tabs = [
 
 function SettingsModal({ opened, close }: SettingsModalType) {
   const [activeTab, setActiveTab] = useState("Preferences");
-  const { settings, setSettings } = useSettings();
+  const { settings } = useSettings();
 
   useEffect(() => {
     ensureSettingsFile();

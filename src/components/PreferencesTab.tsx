@@ -7,6 +7,7 @@ import { join } from "@tauri-apps/api/path";
 import { syncSavePathToGameSettings } from "../util/syncSavePath";
 import { useEffect } from "react";
 import { LauncherSettings } from "../types/settings";
+import { loadSavePathFromGameSettings } from "../util/loadSavePathFromGameSettings";
 
 function PreferencesTab() {
   const { settings, setSettings } = useSettings();
@@ -15,12 +16,25 @@ function PreferencesTab() {
     const trySyncSavePath = async () => {
       const { gameDirectory, saveDirectory } = settings.preferences;
 
-      // Only attempt if both are valid
-      if (!gameDirectory || !saveDirectory) return;
-
+      if (!gameDirectory) return;
       const pd2JsonPath = await join(gameDirectory, "ProjectDiablo.json");
-      const updated = await syncSavePathToGameSettings(settings, pd2JsonPath);
 
+      if (!saveDirectory.trim()) {
+        const loaded = await loadSavePathFromGameSettings(pd2JsonPath);
+        if (loaded) {
+          setSettings((prev) => ({
+            ...prev,
+            preferences: {
+              ...prev.preferences,
+              saveDirectory: loaded,
+            },
+          }));
+          return; // Don't sync yet; wait for next render
+        }
+      }
+
+      if (!saveDirectory) return;
+      const updated = await syncSavePathToGameSettings(settings, pd2JsonPath);
       if (updated) {
         console.log("✅ save_path synced after saveDirectory change");
       }

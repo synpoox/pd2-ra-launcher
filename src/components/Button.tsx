@@ -1,4 +1,4 @@
-import React, { ReactNode, ButtonHTMLAttributes } from "react";
+import { ReactNode, ButtonHTMLAttributes } from "react";
 import { cn } from "../util/components";
 
 type ButtonVariants = "sidebar" | "minimal" | "secondary" | "outline";
@@ -61,9 +61,7 @@ function Button({
         : "bg-transparent hover:bg-white/10"
       : "";
 
-  const disabledClass =
-    props.disabled &&
-    "opacity-30 pointer-events-none";
+  const disabledClass = props.disabled && "opacity-30 pointer-events-none";
 
   return (
     <button
@@ -89,7 +87,6 @@ function Button({
           )}
         />
       )}
-
 
       {icon && (
         <span

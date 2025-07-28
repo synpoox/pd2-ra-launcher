@@ -30,6 +30,13 @@ export async function syncSavePathToGameSettings(
   const launcherSavePath = launcherSettings.preferences.saveDirectory;
   const currentGameSavePath = parsed.classic_game_settings.other.save_path;
 
+  if (!launcherSavePath.trim()) {
+    console.warn(
+      "Launcher saveDirectory is blank, skipping ProjectDiablo.json sync"
+    );
+    return false;
+  }
+
   if (launcherSavePath === currentGameSavePath) {
     console.log("✅ save_path already matches launcher settings");
     return false;

@@ -1,6 +1,5 @@
 import { Select } from "@mantine/core";
 import { useSettings } from "../hooks/useSettings";
-import clsx from "clsx";
 
 function GameTab() {
   const { settings, setSettings } = useSettings();
