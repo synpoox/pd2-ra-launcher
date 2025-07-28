@@ -46,8 +46,9 @@
       },
       "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDExMjIzNkE2MUQ3REQxNEYKUldSUDBYMGRwallpRVh3N1prd2lBY2pUYUdvWUFtek9yY3dYTmlSVGIyeGc4YUNrNmVpdWJmc1QK",
       "endpoints": [
-        "https://github.com/synpoox/pd2-ra-launcher/releases/latest/download/latest.json"
-      ]
+        "http://localhost:8080/latest.json"
+      ],
+      "dangerousInsecureTransportProtocol": true
     }
   }
 }

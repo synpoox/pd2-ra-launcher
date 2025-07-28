@@ -63,7 +63,7 @@ function Play() {
     } catch (error) {
       console.error("Failed to launch PlugY.exe:", error);
       setErrorMessage(
-        `An error occurred while launching PlugY.exe:\n\n${
+        `An error occurred while launching:\n\n${
           error instanceof Error ? error.message : String(error)
         }`
       );
@@ -107,23 +107,31 @@ function Play() {
         withCloseButton={false}
         styles={{
           content: {
-            backgroundColor: "rgba(0, 0, 0, 0.29)", // 50% black background
-            backdropFilter: "blur(75px)", // Frosted glass effect
-            WebkitBackdropFilter: "blur(75px)", // Safari support
+            backgroundColor: "rgba(0, 0, 0, 0.3)",
+            backdropFilter: "blur(75px)",
+            WebkitBackdropFilter: "blur(75px)",
             border: "none",
             padding: 0,
           },
         }}
         centered
-        size="md"
+        size="lg"
       >
-        <p className="text-white/80 text-lg mb-4 whitespace-pre-wrap select-none">
-          {errorMessage}
-        </p>
+        <div className="flex flex-col justify-between p-4">
+          <p className="text-white/80 text-lg whitespace-pre-wrap select-none">
+            {errorMessage}
+          </p>
 
-        <Button size="md" onClick={() => setErrorModalOpen(false)} color="gray">
-          Close
-        </Button>
+          <div className="flex justify-end mt-4">
+            <Button
+              size="md"
+              onClick={() => setErrorModalOpen(false)}
+              color="gray"
+            >
+              Close
+            </Button>
+          </div>
+        </div>
       </Modal>
     </>
   );

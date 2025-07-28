@@ -1,9 +1,10 @@
+import { useAutoUpdater } from "../hooks/useAutoUpdater";
 import { getVersion } from "@tauri-apps/api/app";
 import { openPath } from "@tauri-apps/plugin-opener";
 import { useEffect, useState } from "react";
 import { getConfigDir } from "../util/settings";
 import Button from "./Button";
-import { Group } from "@mantine/core";
+import { Group, Stack } from "@mantine/core";
 import {
   IconBrandDiscordFilled,
   IconBrandGithubFilled,
@@ -18,29 +19,63 @@ function AboutTab() {
   const [appVer, setAppVer] = useState("");
   const [configDir, setConfigDir] = useState("");
 
-  async function getAppVersion() {
-    const version = await getVersion();
-    const path = await getConfigDir();
-    setAppVer(version);
-    setConfigDir(path);
-  }
+  const { status, checkForUpdate, installUpdate, error, progress } =
+    useAutoUpdater();
 
   useEffect(() => {
-    getAppVersion();
+    (async () => {
+      const version = await getVersion();
+      const path = await getConfigDir();
+      setAppVer(version);
+      setConfigDir(path);
+    })();
   }, []);
 
+  // This function will check, and if update available, download & install it automatically
+  const handleUpdateClick = async () => {
+    await checkForUpdate();
+
+    if (status === "available" && installUpdate) {
+      await installUpdate();
+    }
+  };
+
+  // We want to react to status changes too because checkForUpdate is async
+  // and we need to wait until status changes to "available"
+  // But for simplicity, we can also do it inside the hook or debounce here.
+
+  // Instead, let's do a small effect that triggers installUpdate when available:
+  useEffect(() => {
+    if (status === "available") {
+      installUpdate();
+    }
+  }, [status, installUpdate]);
+
   return (
-    <div className="flex flex-col gap-86">
+    <div className="flex flex-col gap-68">
       <div>
         <p className="text-white/80 font-semibold text-xl mb-4">
           Launcher Version: {appVer}
         </p>
-        <Group>
+
+        <Stack align="flex-start" mb={8}>
           <Button onClick={() => openPath(configDir)}>
             Open settings directory
           </Button>
-        </Group>
+
+          <Button
+            onClick={handleUpdateClick}
+            disabled={
+              status === "checking" ||
+              status === "downloading" ||
+              status === "installing"
+            }
+          >
+            Check for updates
+          </Button>
+        </Stack>
       </div>
+
       <div>
         <p className="text-white/80 font-semibold text-lg cursor-default mb-2">
           Made by @Synpoo
