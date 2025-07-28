@@ -21,6 +21,15 @@ function App() {
     }
   }, [status, updateInfo, installUpdate]);
 
+  useEffect(() => {
+    if (import.meta.env.PROD) {
+      const disableContextMenu = (e: MouseEvent) => e.preventDefault();
+      window.addEventListener("contextmenu", disableContextMenu);
+      return () =>
+        window.removeEventListener("contextmenu", disableContextMenu);
+    }
+  }, []);
+
   return (
     <MantineProvider>
       <SettingsModal opened={opened} close={close} />

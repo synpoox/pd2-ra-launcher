@@ -4,7 +4,7 @@ import { openPath } from "@tauri-apps/plugin-opener";
 import { useEffect, useState } from "react";
 import { getConfigDir } from "../util/settings";
 import Button from "./Button";
-import { Group, Stack } from "@mantine/core";
+import { Stack } from "@mantine/core";
 import {
   IconBrandDiscordFilled,
   IconBrandGithubFilled,
@@ -18,9 +18,7 @@ const iconClass =
 function AboutTab() {
   const [appVer, setAppVer] = useState("");
   const [configDir, setConfigDir] = useState("");
-
-  const { status, checkForUpdate, installUpdate, error, progress } =
-    useAutoUpdater();
+  const { status, checkForUpdate, installUpdate } = useAutoUpdater();
 
   useEffect(() => {
     (async () => {
