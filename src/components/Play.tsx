@@ -7,6 +7,7 @@ import { syncAllFromSettings } from "../util/fileSync";
 import { loadSettings } from "../util/settings";
 import { Modal } from "@mantine/core";
 import Button from "./Button";
+import { DEV_MANIFEST, PROD_MANIFEST } from "../constants";
 
 function Play() {
   const { settings, loaded } = useSettings();
@@ -18,6 +19,7 @@ function Play() {
   const [errorMessage, setErrorMessage] = useState("");
 
   async function openExecutable() {
+    const manifestUrl = import.meta.env.DEV ? DEV_MANIFEST : PROD_MANIFEST;
     if (!loaded || !settings) {
       console.warn("Settings not loaded yet — skipping launch");
       return;
@@ -33,10 +35,7 @@ function Play() {
         loadedSettings.preferences.gameDirectory
       );
 
-      await syncAllFromSettings(
-        "https://gist.githubusercontent.com/synpoox/d648baeaa93dd7a7cf926f2f0d9d7712/raw/test-manifest.json",
-        loadedSettings
-      );
+      await syncAllFromSettings(manifestUrl, loadedSettings);
       setLabel("Launching...");
       const gameDir = loadedSettings.preferences.gameDirectory;
       if (!gameDir) throw new Error("Game directory not set");
