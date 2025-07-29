@@ -1,7 +1,15 @@
-# Tauri + React + Typescript
+# PD2 Reawakening Launcher
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+This project serves as the launcher for [PD2 Reawakening](https://github.com/synpoox/pd2-reawakening), a mod of [Project Diablo 2](https://projectdiablo2.com/).
 
-## Recommended IDE Setup
+## Prerequisites
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+Before you begin, ensure you have met the following requirements:
+
+- **Project Diablo 2**: Make sure you have a clean installation of Project Diablo 2.
+
+## Installation
+
+Follow the steps here: https://github.com/synpoox/pd2-reawakening?tab=readme-ov-file#installation
+
+![alt text](/public/readme-image1.png)
