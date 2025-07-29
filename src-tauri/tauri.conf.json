@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "PD2 Reawakening Launcher",
+  "productName": "pd2-ra-launcher",
   "version": "2.0.0",
   "identifier": "pd2-ra-launcher",
   "build": {
