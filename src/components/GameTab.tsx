@@ -17,13 +17,13 @@ function GameTab() {
   };
 
   return (
-    <div className="flex flex-col gap-4 max-w-md">
+    <div className="flex flex-col gap-4 max-w-lg">
       <label className="text-white/80 font-semibold text-xl">
         Density Multiplier
       </label>
       <p className="text-white/80 text-md">
-        Increases the number of monsters per area. Use with caution — may lag or
-        crash on lower-end machines.
+        Increases the number of monsters per area. Use with caution — may lag, crash, or have
+        unintended side-effects on higher multipliers.
       </p>
       <Select
         data={["1", "2", "3", "5", "10"]}
