@@ -3,11 +3,11 @@ import { Command } from "@tauri-apps/plugin-shell";
 import { join } from "@tauri-apps/api/path";
 import { useSettings } from "../hooks/useSettings";
 import { exists } from "@tauri-apps/plugin-fs";
-import { syncAllFromSettings } from "../util/fileSync";
+import { hashLocalFile, syncAllFromSettings } from "../util/fileSync";
 import { loadSettings } from "../util/settings";
 import { Modal } from "@mantine/core";
 import Button from "./Button";
-import { DEV_MANIFEST, PROD_MANIFEST } from "../constants";
+import { DEV_MANIFEST, PROD_MANIFEST, PROJECT_DIABLO_DLL } from "../constants";
 
 function Play() {
   const { settings, loaded } = useSettings();
@@ -30,14 +30,23 @@ function Play() {
 
     try {
       const loadedSettings = await loadSettings();
-      console.log(
-        "Using gameDirectory:",
-        loadedSettings.preferences.gameDirectory
-      );
+      const gameDir = loadedSettings.preferences.gameDirectory;
+      console.log("Using gameDirectory:", gameDir);
+
+      // TEMP: S11 Check
+      const projectDiabloDllPath = `${gameDir}\\${PROJECT_DIABLO_DLL}`;
+      const s11isInstalled =
+        !(await exists(projectDiabloDllPath)) ||
+        (await hashLocalFile(projectDiabloDllPath)) ===
+          "2FBFED3A248C4F9F917F09E2135CDEB7515F0ABE5523955C08426C84693407D7".toLowerCase();
+
+      if (s11isInstalled)
+        throw new Error(
+          "Season 11 installation has been detected.\nPlease check the pinned messages in Discord for instructions on downgrading to Season 10."
+        );
 
       await syncAllFromSettings(manifestUrl, loadedSettings);
       setLabel("Launching...");
-      const gameDir = loadedSettings.preferences.gameDirectory;
       if (!gameDir) throw new Error("Game directory not set");
 
       const exePath = await join(gameDir, "PlugY.exe");
