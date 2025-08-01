@@ -1,6 +1,6 @@
 [package]
 name = "pd2-ra-launcher"
-version = "2.0.0"
+version = "2.1.0"
 description = "PD2 Reawakening Launcher"
 authors = ["you"]
 edition = "2021"
