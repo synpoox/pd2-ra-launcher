@@ -145,6 +145,34 @@ function PreferencesTab() {
             files.
           </p>
         )}
+         <div className="pt-4">
+          <div className="flex items-center gap-4">
+            <input
+              type="checkbox"
+              id="disable-updates"
+              checked={settings.preferences.disableAutomaticUpdates}
+              onChange={(e) =>
+                setSettings((prev) => ({
+                  ...prev,
+                  preferences: {
+                    ...prev.preferences,
+                    disableAutomaticUpdates: e.target.checked,
+                  },
+                }))
+              }
+              className="scale-125"
+            />
+            <label
+              htmlFor="disable-updates"
+              className="font-semibold text-white/80 text-xl"
+            >
+              Disable Automatic Updates
+            </label>
+          </div>
+          <p className="text-white/80 pt-2">
+            Checking this option will prevent your game from updating when clicking the Play button.
+          </p>
+        </div>
       </div>
     </div>
   );

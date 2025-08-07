@@ -23,6 +23,7 @@ const defaultSettings: LauncherSettings = {
     gameDirectory: "",
     saveDirectory: "",
     plugyPath: "",
+    disableAutomaticUpdates: false,
   },
   game: {
     densityMultiplier: 1,

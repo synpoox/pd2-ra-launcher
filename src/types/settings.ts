@@ -3,6 +3,7 @@ export type LauncherSettings = {
     gameDirectory: string;
     saveDirectory: string;
     plugyPath: string;
+    disableAutomaticUpdates: boolean;
   };
   game: {
     densityMultiplier: number;

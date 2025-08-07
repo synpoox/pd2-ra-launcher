@@ -42,10 +42,10 @@ function Play() {
 
       if (s11isInstalled)
         throw new Error(
-          "Season 11 installation has been detected.\nPlease check the pinned messages in Discord for instructions on downgrading to Season 10."
+          "Invalid Season 11 patch has been detected.\nPlease check the pinned messages in Discord and download/install S11 Patch 5-2."
         );
-
-      await syncAllFromSettings(manifestUrl, loadedSettings);
+      if (!loadedSettings.preferences.disableAutomaticUpdates)
+        await syncAllFromSettings(manifestUrl, loadedSettings);
       setLabel("Launching...");
       if (!gameDir) throw new Error("Game directory not set");
 
