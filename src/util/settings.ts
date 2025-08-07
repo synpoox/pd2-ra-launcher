@@ -10,9 +10,11 @@ const defaultSettings: LauncherSettings = {
     gameDirectory: "",
     saveDirectory: "",
     plugyPath: "",
+    disableAutomaticUpdates: false,
   },
   game: {
     densityMultiplier: 1,
+    magicItemsDropIdentified: false,
   },
   about: {
     launcherDirectory: "",
