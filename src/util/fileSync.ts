@@ -26,9 +26,15 @@ export async function hashLocalFile(path: string): Promise<string> {
 export async function fetchSyncManifest(
   manifestUrl: string
 ): Promise<SyncManifest> {
-  const res = await fetch(manifestUrl);
-  if (!res.ok) throw new Error("Failed to fetch sync manifest");
-  return res.json();
+  const res = await fetch(`${manifestUrl}?t=${Date.now()}`, {
+    cache: "no-store", // ensure browser and GitHub Pages bypass cache
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch manifest: ${res.statusText}`);
+  }
+
+  return await res.json();
 }
 
 // Sync a single file to gameDirectory
@@ -52,13 +58,13 @@ export async function syncSingleFile(
   console.log(`[sync] ✅ Updated: ${entry.filename}`);
   return true;
 }
-
 export async function syncAllFromSettings(
   manifestUrl: string,
   settings: LauncherSettings
 ) {
   const gameDir = settings.preferences.gameDirectory;
   const density = settings.game.densityMultiplier;
+  const magicItemsIdentified = settings.game.magicItemsDropIdentified;
   if (!gameDir) {
     console.warn("No gameDirectory is set in settings");
     return;
@@ -66,7 +72,7 @@ export async function syncAllFromSettings(
 
   const manifest = await fetchSyncManifest(manifestUrl);
 
-  // Try to find the specific density mpq
+  // Handle pd2data-*.mpq as before
   const densityEntry = manifest.find(
     (entry) => entry.filename === `pd2data-${density}x-density.mpq`
   );
@@ -77,11 +83,10 @@ export async function syncAllFromSettings(
     );
     await syncSingleFile({ ...densityEntry, filename: "pd2data.mpq" }, gameDir);
   } else {
-    // Fallback to default
+    // Fallback to default pd2data.mpq
     const fallbackEntry = manifest.find(
       (entry) => entry.filename === "pd2data.mpq"
     );
-
     if (fallbackEntry) {
       console.warn(
         `[sync] ⚠️ No density match for ${density}x — falling back to default pd2data.mpq`
@@ -94,9 +99,48 @@ export async function syncAllFromSettings(
     }
   }
 
-  // Sync the rest of the files except any pd2data-* entries (already handled above)
+  // NEW: Handle D2Game.dll based on magicItemsDropIdentified setting
+  if (magicItemsIdentified) {
+    const identifiedEntry = manifest.find(
+      (entry) => entry.filename === "D2Game-IdentifiedMagic.dll"
+    );
+    if (identifiedEntry) {
+      console.log(
+        `[sync] 🔮 magicItemsDropIdentified is true — syncing D2Game-IdentifiedMagic.dll as D2Game.dll`
+      );
+      await syncSingleFile(
+        { ...identifiedEntry, filename: "D2Game.dll" },
+        gameDir
+      );
+    } else {
+      console.warn(
+        `[sync] ⚠️ magicItemsDropIdentified is true but D2Game-IdentifiedMagic.dll not found — skipping D2Game.dll sync`,
+        manifest.map((e) => e)
+      );
+    }
+  } else {
+    // Normal D2Game.dll fallback
+    const d2gameEntry = manifest.find(
+      (entry) => entry.filename === "D2Game.dll"
+    );
+    if (d2gameEntry) {
+      console.log(
+        `[sync] magicItemsDropIdentified is false — syncing normal D2Game.dll`
+      );
+      await syncSingleFile(d2gameEntry, gameDir);
+    } else {
+      console.warn(`[sync] ⚠️ D2Game.dll not found in manifest — skipping.`);
+    }
+  }
+
+  // Sync the rest of the files except pd2data-* and D2Game* (already handled)
   for (const entry of manifest) {
     if (entry.filename.startsWith("pd2data")) continue;
+    if (
+      entry.filename === "D2Game.dll" ||
+      entry.filename === "D2Game-IdentifiedMagic.dll"
+    )
+      continue;
 
     try {
       await syncSingleFile(entry, gameDir);

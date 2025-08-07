@@ -7,6 +7,7 @@ export type LauncherSettings = {
   };
   game: {
     densityMultiplier: number;
+    magicItemsDropIdentified: boolean;
   };
   about: {
     launcherDirectory: string;

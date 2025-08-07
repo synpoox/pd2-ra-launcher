@@ -145,7 +145,7 @@ function PreferencesTab() {
             files.
           </p>
         )}
-         <div className="pt-4">
+         {/* <div className="pt-4">
           <div className="flex items-center gap-4">
             <input
               type="checkbox"
@@ -172,7 +172,7 @@ function PreferencesTab() {
           <p className="text-white/80 pt-2">
             Checking this option will prevent your game from updating when clicking the Play button.
           </p>
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -44,8 +44,8 @@ function Play() {
         throw new Error(
           "Invalid Season 11 patch has been detected.\nPlease check the pinned messages in Discord and download/install S11 Patch 5-2."
         );
-      if (!loadedSettings.preferences.disableAutomaticUpdates)
-        await syncAllFromSettings(manifestUrl, loadedSettings);
+      // if (!loadedSettings.preferences.disableAutomaticUpdates)
+      await syncAllFromSettings(manifestUrl, loadedSettings);
       setLabel("Launching...");
       if (!gameDir) throw new Error("Game directory not set");
 

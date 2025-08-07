@@ -27,6 +27,7 @@ const defaultSettings: LauncherSettings = {
   },
   game: {
     densityMultiplier: 1,
+    magicItemsDropIdentified: false,
   },
   about: {
     launcherDirectory: "",
