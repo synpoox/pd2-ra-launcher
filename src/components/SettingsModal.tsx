@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import {
   IconSettingsFilled,
   IconDeviceGamepad2,
+  IconBrandPowershell,
   IconX,
   IconInfoCircleFilled,
 } from "@tabler/icons-react";
@@ -12,6 +13,7 @@ import AboutTab from "./AboutTab";
 import PreferencesTab from "./PreferencesTab";
 import Button from "./Button";
 import GameTab from "./GameTab";
+import LinuxTab from "./LinuxTab";
 
 type SettingsModalType = {
   opened: boolean;
@@ -24,6 +26,7 @@ const iconClass =
 const tabs = [
   { label: "Preferences", icon: IconSettingsFilled },
   { label: "Game", icon: IconDeviceGamepad2 },
+  { label: "Linux", icon: IconBrandPowershell },
   { label: "About", icon: IconInfoCircleFilled },
 ];
 
@@ -120,6 +123,7 @@ function SettingsModal({ opened, close }: SettingsModalType) {
           {/* Tab Content */}
           <div className="flex-1 overflow-y-auto p-8">
             {activeTab === "Preferences" && settings && <PreferencesTab />}
+            {activeTab === "Linux" && settings && <LinuxTab />}
             {activeTab === "Game" && settings && <GameTab />}
             {activeTab === "About" && settings && <AboutTab />}
           </div>

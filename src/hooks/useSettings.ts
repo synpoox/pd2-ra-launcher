@@ -25,6 +25,9 @@ const defaultSettings: LauncherSettings = {
     plugyPath: "",
     disableAutomaticUpdates: false,
   },
+  linux: {
+    launchShortcut: "",
+  },
   game: {
     densityMultiplier: 1,
     magicItemsDropIdentified: false,

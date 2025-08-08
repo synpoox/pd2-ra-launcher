@@ -5,6 +5,9 @@ export type LauncherSettings = {
     plugyPath: string;
     disableAutomaticUpdates: boolean;
   };
+  linux: {
+    launchShortcut: string;
+  };
   game: {
     densityMultiplier: number;
     magicItemsDropIdentified: boolean;

@@ -33,8 +33,10 @@ function Play() {
       const currentPlatform = platform();
       const loadedSettings = await loadSettings();
       const gameDir = loadedSettings.preferences.gameDirectory;
+      const desktopLocation = loadedSettings.linux.launchShortcut;
       console.log("Using gameDirectory:", gameDir);
       console.log("currentPlatform:", currentPlatform);
+      //console.log("desktopLocation:", desktopLocation)
 
       // TEMP: S11 Check
       const projectDiabloDllPath = currentPlatform !== "windows" ?
@@ -54,6 +56,9 @@ function Play() {
       setLabel("Launching...");
       if (!gameDir) throw new Error("Game directory not set");
 
+      // Throw an error if a .desktop file has not been selected in options and you are running on Linux
+      if (currentPlatform === "linux" && !desktopLocation) throw new Error("Desktop file not set");
+
       const exePath = await join(gameDir, "PlugY.exe");
       const existsAtPath = await exists(exePath);
 
@@ -69,15 +74,11 @@ function Play() {
         return; // exit early to not try to launch
       }
 
-      // -- WIP Command --
-      // Two possible solutions to launch the game for Linux:
-      // 1. The "~/path/to/pd2-shortcut.desktop" string below would be replaced by a setting to select where your
-      //    pd2 .desktop file is located and launch that instead using 'grep' & 'sed' the value of the "Exec"-string
-      // 2. A setting to type in a custom command instead to run when hitting the Play-button.
+      // Run bash command if your current platform is not Windows
       const command = currentPlatform !== "windows" ? 
-        Command.create("bash", [
-          "-c", "$(grep '^Exec' ~/path/to/pd2-shortcut.desktop | sed 's/^Exec=//' | sed 's/%.//')"
-          ], { cwd: gameDir }) :
+        Command.create("bash",
+          ["-c", "$(grep '^Exec' " + desktopLocation + " | sed 's/^Exec=//' | sed 's/%.//')"],
+          { cwd: gameDir }) :
         Command.create("cmd", ["/C", exePath], { cwd: gameDir });
         
       //console.log("Command to run:", command);
