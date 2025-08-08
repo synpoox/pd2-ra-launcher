@@ -69,9 +69,14 @@ function Play() {
         return; // exit early to not try to launch
       }
 
+      // -- WIP Command --
+      // Two possible solutions to launch the game for Linux:
+      // 1. The "~/path/to/pd2-shortcut.desktop" string below would be replaced by a setting to select where your
+      //    pd2 .desktop file is located and launch that instead using 'grep' & 'sed' the value of the "Exec"-string
+      // 2. A setting to type in a custom command instead to run when hitting the Play-button.
       const command = currentPlatform !== "windows" ? 
         Command.create("bash", [
-          "-c", "$(grep '^Exec' ~/path/to/shortcut.desktop | sed 's/^Exec=//' | sed 's/%.//')"
+          "-c", "$(grep '^Exec' ~/path/to/pd2-shortcut.desktop | sed 's/^Exec=//' | sed 's/%.//')"
           ], { cwd: gameDir }) :
         Command.create("cmd", ["/C", exePath], { cwd: gameDir });
         
