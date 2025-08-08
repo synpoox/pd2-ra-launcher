@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { platform } from '@tauri-apps/plugin-os';
 import { Command } from "@tauri-apps/plugin-shell";
 import { join } from "@tauri-apps/api/path";
 import { useSettings } from "../hooks/useSettings";
@@ -29,12 +30,16 @@ function Play() {
     setLabel("Verifying files...");
 
     try {
+      const currentPlatform = platform();
       const loadedSettings = await loadSettings();
       const gameDir = loadedSettings.preferences.gameDirectory;
       console.log("Using gameDirectory:", gameDir);
+      console.log("currentPlatform:", currentPlatform);
 
       // TEMP: S11 Check
-      const projectDiabloDllPath = `${gameDir}\\${PROJECT_DIABLO_DLL}`;
+      const projectDiabloDllPath = currentPlatform !== "windows" ?
+        `${gameDir}/${PROJECT_DIABLO_DLL}` : 
+        `${gameDir}\\${PROJECT_DIABLO_DLL}`;
       const s11isInstalled =
         !(await exists(projectDiabloDllPath)) ||
         (await hashLocalFile(projectDiabloDllPath)) ===
@@ -64,7 +69,13 @@ function Play() {
         return; // exit early to not try to launch
       }
 
-      const command = Command.create("cmd", ["/C", exePath], { cwd: gameDir });
+      const command = currentPlatform !== "windows" ? 
+        Command.create("bash", [
+          "-c", "$(grep '^Exec' ~/path/to/shortcut.desktop | sed 's/^Exec=//' | sed 's/%.//')"
+          ], { cwd: gameDir }) :
+        Command.create("cmd", ["/C", exePath], { cwd: gameDir });
+        
+      //console.log("Command to run:", command);
       console.log("Launching PlugY.exe from", gameDir);
       await command.spawn();
       console.log("Successfully launched PlugY.exe");

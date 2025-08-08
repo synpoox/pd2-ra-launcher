@@ -81,7 +81,7 @@ function PreferencesTab() {
           type="text"
           value={gameDir}
           readOnly
-          className="w-200 px-3 py-2 bg-black/40 text-white/60 rounded border border-2 border-black/20 text-sm focus:outline-none cursor-default"
+          className="w-200 px-3 py-2 bg-black/40 text-white/60 rounded border-2 border-black/20 text-sm focus:outline-none cursor-default"
         />
 
         <Group gap="sm">
@@ -113,7 +113,7 @@ function PreferencesTab() {
           type="text"
           value={saveDir}
           readOnly
-          className="w-200 px-3 py-2 bg-black/40 text-white/60 rounded border border-2 border-black/20 text-sm focus:outline-none cursor-default"
+          className="w-200 px-3 py-2 bg-black/40 text-white/60 rounded border-2 border-black/20 text-sm focus:outline-none cursor-default"
         />
 
         <Group gap="sm">
