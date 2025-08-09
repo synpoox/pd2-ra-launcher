@@ -28,6 +28,8 @@ tauri-plugin-dialog = "2"
 tauri-plugin-shell = "2"
 tauri-plugin-upload = "2"
 tauri-plugin-os = "2"
+# A Rust crate to fix the PATH environment variable on macOS and Linux when running a GUI app.
+fix-path-env = { git = "https://github.com/tauri-apps/fix-path-env-rs" }
 
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
 tauri-plugin-updater = "2"

@@ -33,10 +33,10 @@ function Play() {
       const currentPlatform = platform();
       const loadedSettings = await loadSettings();
       const gameDir = loadedSettings.preferences.gameDirectory;
-      const desktopLocation = loadedSettings.linux.launchShortcut;
+      const wineDir = loadedSettings.linux.winePrefix;
+      const wineBin = loadedSettings.linux.wineRunner;
       console.log("Using gameDirectory:", gameDir);
       console.log("currentPlatform:", currentPlatform);
-      //console.log("desktopLocation:", desktopLocation)
 
       // TEMP: S11 Check
       const projectDiabloDllPath = currentPlatform !== "windows" ?
@@ -56,9 +56,6 @@ function Play() {
       setLabel("Launching...");
       if (!gameDir) throw new Error("Game directory not set");
 
-      // Throw an error if a .desktop file has not been selected in options and you are running on Linux
-      if (currentPlatform === "linux" && !desktopLocation) throw new Error("Desktop file not set");
-
       const exePath = await join(gameDir, "PlugY.exe");
       const existsAtPath = await exists(exePath);
 
@@ -74,14 +71,19 @@ function Play() {
         return; // exit early to not try to launch
       }
 
+      // Wine launch string
+      const wineCommand = () => {
+        return "cd '"+gameDir+"' && "
+        +(wineDir ? 'WINEPREFIX=\''+wineDir+'\' ' : '')
+        +(wineBin ? '\''+wineBin+'/wine\'' : 'wine')+" './PlugY.exe'";
+      }
+      //console.log(wineCommand());
+
       // Run bash command if your current platform is not Windows
       const command = currentPlatform !== "windows" ? 
-        Command.create("bash",
-          ["-c", "$(grep '^Exec' " + desktopLocation + " | sed 's/^Exec=//' | sed 's/%.//')"],
-          { cwd: gameDir }) :
+        Command.create("bash", ["-c", wineCommand()], { cwd: gameDir }) :
         Command.create("cmd", ["/C", exePath], { cwd: gameDir });
-        
-      //console.log("Command to run:", command);
+
       console.log("Launching PlugY.exe from", gameDir);
       await command.spawn();
       console.log("Successfully launched PlugY.exe");

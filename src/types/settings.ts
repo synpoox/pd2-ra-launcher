@@ -6,7 +6,8 @@ export type LauncherSettings = {
     disableAutomaticUpdates: boolean;
   };
   linux: {
-    launchShortcut: string;
+    winePrefix: string;
+    wineRunner: string;
   };
   game: {
     densityMultiplier: number;

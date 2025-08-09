@@ -13,7 +13,8 @@ const defaultSettings: LauncherSettings = {
     disableAutomaticUpdates: false,
   },
   linux: {
-    launchShortcut: "",
+    winePrefix: "",
+    wineRunner: "",
   },
   game: {
     densityMultiplier: 1,
