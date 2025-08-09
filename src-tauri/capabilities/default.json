@@ -16,6 +16,9 @@
     "fs:allow-appconfig-read",
     "fs:allow-appconfig-write",
     "fs:scope-appconfig-recursive",
+    "fs:allow-home-read",
+    "fs:allow-home-write",
+    "fs:scope-home-recursive",
     "process:default",
     "core:path:default",
     "opener:default",
@@ -26,6 +29,9 @@
       "allow": [
         {
           "path": "**/*"
+        },
+        {
+          "path": "$APPCONFIG"
         }
       ]
     },
@@ -34,7 +40,14 @@
     "shell:allow-spawn",
     {
       "identifier": "fs:scope",
-      "allow": [{ "path": "**/*" }]
+      "allow": [
+        {
+          "path": "**/*"
+        },
+        {
+          "path": "$HOME"
+        }
+      ]
     },
     {
       "identifier": "shell:allow-spawn",
@@ -42,6 +55,11 @@
         {
           "name": "cmd",
           "cmd": "cmd",
+          "args": true
+        },
+        {
+          "name": "bash",
+          "cmd": "bash",
           "args": true
         }
       ]

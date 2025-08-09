@@ -25,6 +25,10 @@ const defaultSettings: LauncherSettings = {
     plugyPath: "",
     disableAutomaticUpdates: false,
   },
+  linux: {
+    winePrefix: "",
+    wineRunner: "",
+  },
   game: {
     densityMultiplier: 1,
     magicItemsDropIdentified: false,
