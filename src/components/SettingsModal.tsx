@@ -1,4 +1,5 @@
 import { Modal } from "@mantine/core";
+import { platform } from '@tauri-apps/plugin-os';
 import { useEffect, useState } from "react";
 import {
   IconSettingsFilled,
@@ -79,7 +80,9 @@ function SettingsModal({ opened, close }: SettingsModalType) {
             }}
           />
 
-          {tabs.map(({ label, icon: Icon }) => (
+          {tabs
+            .filter(({ label }) => !(label === "Linux" && platform() !== "linux"))
+            .map(({ label, icon: Icon }) => (
             <Button
               variant="sidebar"
               icon={<Icon size={20} className="relative z-10 text-white" />}

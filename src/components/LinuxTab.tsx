@@ -56,11 +56,8 @@ function LinuxTab() {
   return (
     <div className="flex flex-col gap-10">
       <div className="flex flex-col gap-4">
-        <p className="text-sm font-semibold text-amber-300">
-          You can ignore these settings if you are on Windows
-        </p>
         <p className="text-white/80 font-semibold text-xl">
-          Project Diablo II Installation Directory <i>(From Preferences)</i>
+          Project Diablo II Installation Directory <i>(Preferences)</i>
         </p>
         <input
           type="text"
