@@ -71,6 +71,23 @@ function Play() {
         return; // exit early to not try to launch
       }
 
+      // Check for a Wine binary if there's a Winerunner directory selected
+      if(currentPlatform === "linux" && wineBin) {
+        const winePath = await join(wineBin, "wine")
+        const wineExists = await exists(winePath);
+
+        console.log("Wine binary exist at path?", winePath, wineExists);
+
+        if (!wineExists) {
+          setErrorMessage(
+            `Wine was not found in the selected path for a Winerunner:\n\n"${winePath}"`
+          );
+
+          setErrorModalOpen(true);
+          return;
+        }
+      }
+
       // Wine launch string
       const wineCommand = () => {
         return "cd '"+gameDir+"' && "
