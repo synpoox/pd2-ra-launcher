@@ -91,7 +91,10 @@ function SettingsModal({ opened, close }: SettingsModalType) {
         {/* Main Content Area */}
         <div className="flex-1 flex flex-col relative select-none">
           {/* Top bar */}
-          <div className="relative flex justify-between items-center px-6 py-8">
+          <div
+            data-tauri-drag-region
+            className="relative flex justify-between items-center px-6 py-8"
+          >
             {/* Border fade */}
             <div
               className="absolute bottom-0 left-0 w-full h-px bg-white/30 pointer-events-none"
