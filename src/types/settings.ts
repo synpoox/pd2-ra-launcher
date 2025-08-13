@@ -5,6 +5,10 @@ export type LauncherSettings = {
     plugyPath: string;
     disableAutomaticUpdates: boolean;
   };
+  linux: {
+    winePrefix: string;
+    wineRunner: string;
+  };
   game: {
     densityMultiplier: number;
     magicItemsDropIdentified: boolean;

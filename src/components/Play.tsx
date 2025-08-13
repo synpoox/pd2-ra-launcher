@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { platform } from '@tauri-apps/plugin-os';
 import { Command } from "@tauri-apps/plugin-shell";
 import { join } from "@tauri-apps/api/path";
 import { useSettings } from "../hooks/useSettings";
@@ -29,12 +30,18 @@ function Play() {
     setLabel("Verifying files...");
 
     try {
+      const currentPlatform = platform();
       const loadedSettings = await loadSettings();
       const gameDir = loadedSettings.preferences.gameDirectory;
+      const wineDir = loadedSettings.linux.winePrefix;
+      const wineBin = loadedSettings.linux.wineRunner;
       console.log("Using gameDirectory:", gameDir);
+      console.log("currentPlatform:", currentPlatform);
 
       // TEMP: S11 Check
-      const projectDiabloDllPath = `${gameDir}\\${PROJECT_DIABLO_DLL}`;
+      const projectDiabloDllPath = currentPlatform !== "windows" ?
+        `${gameDir}/${PROJECT_DIABLO_DLL}` : 
+        `${gameDir}\\${PROJECT_DIABLO_DLL}`;
       const s11isInstalled =
         !(await exists(projectDiabloDllPath)) ||
         (await hashLocalFile(projectDiabloDllPath)) ===
@@ -64,7 +71,36 @@ function Play() {
         return; // exit early to not try to launch
       }
 
-      const command = Command.create("cmd", ["/C", exePath], { cwd: gameDir });
+      // Check for a Wine binary if there's a Winerunner directory selected
+      if(currentPlatform === "linux" && wineBin) {
+        const winePath = await join(wineBin, "wine")
+        const wineExists = await exists(winePath);
+
+        console.log("Wine binary exist at path?", winePath, wineExists);
+
+        if (!wineExists) {
+          setErrorMessage(
+            `Wine was not found in the selected path for a Winerunner:\n\n"${winePath}"`
+          );
+
+          setErrorModalOpen(true);
+          return;
+        }
+      }
+
+      // Wine launch string
+      const wineCommand = () => {
+        return "cd '"+gameDir+"' && "
+        +(wineDir ? 'WINEPREFIX=\''+wineDir+'\' ' : '')
+        +(wineBin ? '\''+wineBin+'/wine\'' : 'wine')+" './PlugY.exe'";
+      }
+      //console.log(wineCommand());
+
+      // Run bash command if your current platform is not Windows
+      const command = currentPlatform !== "windows" ? 
+        Command.create("bash", ["-c", wineCommand()], { cwd: gameDir }) :
+        Command.create("cmd", ["/C", exePath], { cwd: gameDir });
+
       console.log("Launching PlugY.exe from", gameDir);
       await command.spawn();
       console.log("Successfully launched PlugY.exe");

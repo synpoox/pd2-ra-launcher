@@ -47,7 +47,9 @@
     }
   },
   "plugins": {
-    "fs": {},
+    "fs": {
+      "requireLiteralLeadingDot": false
+    },
     "updater": {
       "windows": {
         "installMode": "passive"

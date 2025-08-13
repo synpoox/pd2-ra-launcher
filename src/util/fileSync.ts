@@ -1,4 +1,5 @@
 import { exists, readFile } from "@tauri-apps/plugin-fs";
+import { platform } from '@tauri-apps/plugin-os';
 import { download } from "@tauri-apps/plugin-upload";
 import { LauncherSettings } from "../types/settings";
 
@@ -42,7 +43,9 @@ export async function syncSingleFile(
   entry: SyncEntry,
   gameDir: string
 ): Promise<boolean> {
-  const localPath = `${gameDir}\\${entry.filename}`; // Windows safe
+  const localPath = platform() !== "windows" ?
+    `${gameDir}/${entry.filename}` :
+    `${gameDir}\\${entry.filename}`; // Windows safe
 
   const needsUpdate =
     !(await exists(localPath)) ||
