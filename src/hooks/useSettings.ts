@@ -28,6 +28,7 @@ const defaultSettings: LauncherSettings = {
   linux: {
     winePrefix: "",
     wineRunner: "",
+    commandPrefix: "",
   },
   game: {
     densityMultiplier: 1,

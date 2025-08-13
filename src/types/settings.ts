@@ -8,6 +8,7 @@ export type LauncherSettings = {
   linux: {
     winePrefix: string;
     wineRunner: string;
+    commandPrefix: string;
   };
   game: {
     densityMultiplier: number;

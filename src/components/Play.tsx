@@ -33,8 +33,7 @@ function Play() {
       const currentPlatform = platform();
       const loadedSettings = await loadSettings();
       const gameDir = loadedSettings.preferences.gameDirectory;
-      const wineDir = loadedSettings.linux.winePrefix;
-      const wineBin = loadedSettings.linux.wineRunner;
+      const linuxSettings = loadedSettings.linux;
       console.log("Using gameDirectory:", gameDir);
       console.log("currentPlatform:", currentPlatform);
 
@@ -72,8 +71,8 @@ function Play() {
       }
 
       // Check for a Wine binary if there's a Winerunner directory selected
-      if(currentPlatform === "linux" && wineBin) {
-        const winePath = await join(wineBin, "wine")
+      if(currentPlatform === "linux" && linuxSettings.wineRunner) {
+        const winePath = await join(linuxSettings.wineRunner, "wine")
         const wineExists = await exists(winePath);
 
         console.log("Wine binary exist at path?", winePath, wineExists);
@@ -90,11 +89,12 @@ function Play() {
 
       // Wine launch string
       const wineCommand = () => {
-        return "cd '"+gameDir+"' && "
-        +(wineDir ? 'WINEPREFIX=\''+wineDir+'\' ' : '')
-        +(wineBin ? '\''+wineBin+'/wine\'' : 'wine')+" './PlugY.exe'";
+        return "cd '"+gameDir+"' &&"
+        +(linuxSettings.winePrefix ? ' WINEPREFIX=\''+linuxSettings.winePrefix+'\'' : '')
+        +(linuxSettings.commandPrefix ? ' '+linuxSettings.commandPrefix : '')
+        +(linuxSettings.wineRunner ? ' \''+linuxSettings.wineRunner+'/wine\'' : ' wine')+" './PlugY.exe'";
       }
-      //console.log(wineCommand());
+      console.log(wineCommand());
 
       // Run bash command if your current platform is not Windows
       const command = currentPlatform !== "windows" ? 
