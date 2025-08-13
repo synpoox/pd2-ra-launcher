@@ -2,25 +2,27 @@ import { Group } from "@mantine/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { useSettings } from "../hooks/useSettings"; // Adjust path as needed
 import Button from "./Button";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { LauncherSettings } from "../types/settings";
 
 function LinuxTab() {
   const { settings, setSettings } = useSettings();
+  const [cmdPrefix, setCmdPrefix] = useState("");
 
   useEffect(() => {
     const trySyncSavePath = async () => {
-      const { winePrefix, wineRunner } = settings.linux;
+      const { winePrefix, wineRunner, commandPrefix } = settings.linux;
 
-      if (!winePrefix || !wineRunner) return;
+      setCmdPrefix(settings.linux.commandPrefix || "");
+
+      if (!winePrefix || !wineRunner || !commandPrefix) return;
     };
 
     trySyncSavePath();
-  }, [settings.linux.winePrefix, settings.linux.wineRunner]);
+  }, [settings.linux.winePrefix, settings.linux.wineRunner, settings.linux.commandPrefix]);
 
   const gameDir = settings.preferences.gameDirectory;
-  const wineDir = settings.linux.winePrefix;
-  const wineRun = settings.linux.wineRunner;
+  const linuxSettings = settings.linux;
 
   const handleChangeDirectory = async (
     key: keyof LauncherSettings["linux"]
@@ -41,7 +43,19 @@ function LinuxTab() {
     }
   };
 
-  const handleClearDirectory = async (
+  const handleCommandPrefix = async (
+    key: keyof LauncherSettings["linux"]
+  ) => {
+    setSettings((prev) => ({
+        ...prev,
+        linux: {
+          ...prev.linux,
+          [key]: cmdPrefix,
+        },
+      }));
+  };
+
+  const handleClearFormField = async (
     key: keyof LauncherSettings["linux"]
   ) => {
       setSettings((prev) => ({
@@ -73,7 +87,7 @@ function LinuxTab() {
         </p>
         <input
           type="text"
-          value={wineDir}
+          value={linuxSettings.winePrefix}
           readOnly
           className="w-200 px-3 py-2 bg-black/40 text-white/60 rounded border-2 border-black/20 text-sm focus:outline-none cursor-default"
         />
@@ -88,7 +102,7 @@ function LinuxTab() {
           </Button>
           <Button
             color="white"
-            onClick={() => handleClearDirectory("winePrefix")}
+            onClick={() => handleClearFormField("winePrefix")}
           >
             Clear
           </Button>
@@ -101,7 +115,7 @@ function LinuxTab() {
         </p>
         <input
           type="text"
-          value={wineRun}
+          value={linuxSettings.wineRunner}
           readOnly
           className="w-200 px-3 py-2 bg-black/40 text-white/60 rounded border-2 border-black/20 text-sm focus:outline-none cursor-default"
         />
@@ -116,7 +130,35 @@ function LinuxTab() {
           </Button>
           <Button
             color="white"
-            onClick={() => handleClearDirectory("wineRunner")}
+            onClick={() => handleClearFormField("wineRunner")}
+          >
+            Clear
+          </Button>
+        </Group>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <p className="text-white/80 font-semibold text-xl">
+          Command Prefix <i>(Optional)</i>
+        </p>
+        <input
+          type="text"
+          value={cmdPrefix}
+          onChange={(e) => setCmdPrefix(e.target.value)}
+          className="w-200 px-3 py-2 bg-black/40 text-white/60 rounded border-2 border-black/20 text-sm focus:outline-none"
+        />
+
+        <Group gap="sm">
+          <Button
+            disabled={settings.preferences.gameDirectory === ""}
+            color="white"
+            onClick={() => handleCommandPrefix("commandPrefix")}
+          >
+            Save
+          </Button>
+          <Button
+            color="white"
+            onClick={() => handleClearFormField("commandPrefix")}
           >
             Clear
           </Button>

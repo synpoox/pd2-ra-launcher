@@ -5,6 +5,7 @@ import { TitleBar } from "./components/TitleBar";
 
 import { MantineProvider } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { platform } from '@tauri-apps/plugin-os';
 import SettingsModal from "./components/SettingsModal";
 import Play from "./components/Play";
 import { useAutoUpdater } from "./hooks/useAutoUpdater";
@@ -30,6 +31,8 @@ function App() {
     }
   }, []);
 
+  const noAnimation = () => { if(platform() === "linux") return true; }
+
   return (
     <MantineProvider>
       <SettingsModal opened={opened} close={close} />
@@ -38,7 +41,7 @@ function App() {
         <div className="absolute inset-0 overflow-hidden z-0">
           {/* Zoomed + Animated Background */}
           <div
-            className="w-full h-full bg-cover animate-pulse-slow"
+            className={`w-full h-full bg-cover` + (noAnimation() ?? " animate-pulse-slow")}
             style={{
               backgroundImage: "url('/background.jpg')",
               backgroundPosition: "top right",
