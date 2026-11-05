@@ -1,6 +1,6 @@
 [package]
 name = "pd2-ra-launcher"
-version = "2.3.0"
+version = "2.4.0"
 description = "PD2 Reawakening Launcher"
 authors = ["you"]
 edition = "2021"
@@ -27,6 +27,7 @@ tauri-plugin-process = "2"
 tauri-plugin-dialog = "2"
 tauri-plugin-shell = "2"
 tauri-plugin-upload = "2"
+tauri-plugin-http = "2"
 tauri-plugin-os = "2"
 # A Rust crate to fix the PATH environment variable on macOS and Linux when running a GUI app.
 fix-path-env = { git = "https://github.com/tauri-apps/fix-path-env-rs" }

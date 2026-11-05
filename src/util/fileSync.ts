@@ -1,5 +1,6 @@
 import { exists, readFile } from "@tauri-apps/plugin-fs";
 import { platform } from '@tauri-apps/plugin-os';
+import { fetch } from "@tauri-apps/plugin-http";
 import { download } from "@tauri-apps/plugin-upload";
 import { LauncherSettings } from "../types/settings";
 
@@ -27,9 +28,8 @@ export async function hashLocalFile(path: string): Promise<string> {
 export async function fetchSyncManifest(
   manifestUrl: string
 ): Promise<SyncManifest> {
-  const res = await fetch(`${manifestUrl}?t=${Date.now()}`, {
-    cache: "no-store", // ensure browser and GitHub Pages bypass cache
-  });
+  // Tauri's fetch: GitHub release downloads send no CORS headers.
+  const res = await fetch(manifestUrl, { cache: "no-store" });
 
   if (!res.ok) {
     throw new Error(`Failed to fetch manifest: ${res.statusText}`);
