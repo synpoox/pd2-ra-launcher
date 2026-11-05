@@ -1,4 +1,4 @@
-import { useAutoUpdater } from "../hooks/useAutoUpdater";
+import { AutoUpdater } from "../hooks/useAutoUpdater";
 import { getVersion } from "@tauri-apps/api/app";
 import { openPath } from "@tauri-apps/plugin-opener";
 import { useEffect, useState } from "react";
@@ -15,10 +15,10 @@ import {
 const iconClass =
   "w-10 h-10 flex items-center justify-center rounded transition-all duration-200 ease-in-out hover:bg-gray-300/30 hover:scale-115 cursor-pointer";
 
-function AboutTab() {
+function AboutTab({ updater }: { updater: AutoUpdater }) {
   const [appVer, setAppVer] = useState("");
   const [configDir, setConfigDir] = useState("");
-  const { status, checkForUpdate, installUpdate } = useAutoUpdater();
+  const { status, checkForUpdate } = updater;
 
   useEffect(() => {
     (async () => {
@@ -28,26 +28,6 @@ function AboutTab() {
       setConfigDir(path);
     })();
   }, []);
-
-  // This function will check, and if update available, download & install it automatically
-  const handleUpdateClick = async () => {
-    await checkForUpdate();
-
-    if (status === "available" && installUpdate) {
-      await installUpdate();
-    }
-  };
-
-  // We want to react to status changes too because checkForUpdate is async
-  // and we need to wait until status changes to "available"
-  // But for simplicity, we can also do it inside the hook or debounce here.
-
-  // Instead, let's do a small effect that triggers installUpdate when available:
-  useEffect(() => {
-    if (status === "available") {
-      installUpdate();
-    }
-  }, [status, installUpdate]);
 
   return (
     <div className="flex flex-col gap-68">
@@ -62,14 +42,14 @@ function AboutTab() {
           </Button>
 
           <Button
-            onClick={handleUpdateClick}
+            onClick={checkForUpdate}
             disabled={
               status === "checking" ||
               status === "downloading" ||
               status === "installing"
             }
           >
-            Check for updates
+            {status === "no-update" ? "Up to date" : "Check for updates"}
           </Button>
         </Stack>
       </div>

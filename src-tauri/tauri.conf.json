@@ -40,9 +40,6 @@
     "linux": {
       "appimage": {
         "bundleMediaFramework": false
-      },
-      "deb": {
-        "depends": ["libwebkit2gtk-4.0-37"]
       }
     }
   },

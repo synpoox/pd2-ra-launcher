@@ -58,6 +58,8 @@ export async function syncSingleFile(
 
   console.log(`[sync] ⬇️ Downloading ${entry.filename}...`);
   await download(entry.url, localPath);
+  if ((await hashLocalFile(localPath)) !== entry.hash.toLowerCase())
+    throw new Error(`${entry.filename} does not match the manifest after downloading`);
   console.log(`[sync] ✅ Updated: ${entry.filename}`);
   return true;
 }
@@ -145,11 +147,7 @@ export async function syncAllFromSettings(
     )
       continue;
 
-    try {
-      await syncSingleFile(entry, gameDir);
-    } catch (err) {
-      console.error(`Failed to sync ${entry.filename}`, err);
-    }
+    await syncSingleFile(entry, gameDir); // a failure stops the launch
   }
 
   console.log("✅ Sync complete.");
