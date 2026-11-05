@@ -4,11 +4,11 @@ import { Command } from "@tauri-apps/plugin-shell";
 import { join } from "@tauri-apps/api/path";
 import { useSettings } from "../hooks/useSettings";
 import { exists } from "@tauri-apps/plugin-fs";
-import { hashLocalFile, syncAllFromSettings } from "../util/fileSync";
+import { syncAllFromSettings } from "../util/fileSync";
 import { loadSettings } from "../util/settings";
 import { Modal } from "@mantine/core";
 import Button from "./Button";
-import { MANIFEST_URL, PROJECT_DIABLO_DLL } from "../constants";
+import { MANIFEST_URL } from "../constants";
 
 function Play() {
   const { settings, loaded } = useSettings();
@@ -37,19 +37,6 @@ function Play() {
       console.log("Using gameDirectory:", gameDir);
       console.log("currentPlatform:", currentPlatform);
 
-      // TEMP: S11 Check
-      const projectDiabloDllPath = currentPlatform !== "windows" ?
-        `${gameDir}/${PROJECT_DIABLO_DLL}` : 
-        `${gameDir}\\${PROJECT_DIABLO_DLL}`;
-      const s11isInstalled =
-        !(await exists(projectDiabloDllPath)) ||
-        (await hashLocalFile(projectDiabloDllPath)) ===
-          "2FBFED3A248C4F9F917F09E2135CDEB7515F0ABE5523955C08426C84693407D7".toLowerCase();
-
-      if (s11isInstalled)
-        throw new Error(
-          "Invalid Season 11 patch has been detected.\nPlease check the pinned messages in Discord and download/install S11 Patch 5-2."
-        );
       // if (!loadedSettings.preferences.disableAutomaticUpdates)
       await syncAllFromSettings(MANIFEST_URL, loadedSettings);
       setLabel("Launching...");
