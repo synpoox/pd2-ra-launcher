@@ -29,7 +29,7 @@ export async function fetchSyncManifest(
   manifestUrl: string
 ): Promise<SyncManifest> {
   // Tauri's fetch: GitHub release downloads send no CORS headers.
-  const res = await fetch(manifestUrl, { cache: "no-store" });
+  const res = await fetch(manifestUrl);
 
   if (!res.ok) {
     throw new Error(`Failed to fetch manifest: ${res.statusText}`);

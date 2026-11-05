@@ -8,7 +8,7 @@ import { hashLocalFile, syncAllFromSettings } from "../util/fileSync";
 import { loadSettings } from "../util/settings";
 import { Modal } from "@mantine/core";
 import Button from "./Button";
-import { DEV_MANIFEST, PROD_MANIFEST, PROJECT_DIABLO_DLL } from "../constants";
+import { MANIFEST_URL, PROJECT_DIABLO_DLL } from "../constants";
 
 function Play() {
   const { settings, loaded } = useSettings();
@@ -20,7 +20,6 @@ function Play() {
   const [errorMessage, setErrorMessage] = useState("");
 
   async function openExecutable() {
-    const manifestUrl = import.meta.env.DEV ? DEV_MANIFEST : PROD_MANIFEST;
     if (!loaded || !settings) {
       console.warn("Settings not loaded yet — skipping launch");
       return;
@@ -52,7 +51,7 @@ function Play() {
           "Invalid Season 11 patch has been detected.\nPlease check the pinned messages in Discord and download/install S11 Patch 5-2."
         );
       // if (!loadedSettings.preferences.disableAutomaticUpdates)
-      await syncAllFromSettings(manifestUrl, loadedSettings);
+      await syncAllFromSettings(MANIFEST_URL, loadedSettings);
       setLabel("Launching...");
       if (!gameDir) throw new Error("Game directory not set");
 
