@@ -8,7 +8,7 @@ import { syncAllFromSettings } from "../util/fileSync";
 import { loadSettings } from "../util/settings";
 import { Modal } from "@mantine/core";
 import Button from "./Button";
-import { MANIFEST_URL } from "../constants";
+import { GAME_ARGS, MANIFEST_URL } from "../constants";
 
 function Play() {
   const { settings, loaded } = useSettings();
@@ -78,14 +78,14 @@ function Play() {
       const wineCommand = () => {
         return "cd '"+gameDir+"' && "
         +(wineDir ? 'WINEPREFIX=\''+wineDir+'\' ' : '')
-        +(wineBin ? '\''+wineBin+'/wine\'' : 'wine')+" './PlugY.exe'";
+        +(wineBin ? '\''+wineBin+'/wine\'' : 'wine')+" './PlugY.exe' "+GAME_ARGS;
       }
       //console.log(wineCommand());
 
       // Run bash command if your current platform is not Windows
       const command = currentPlatform !== "windows" ? 
         Command.create("bash", ["-c", wineCommand()], { cwd: gameDir }) :
-        Command.create("cmd", ["/C", exePath], { cwd: gameDir });
+        Command.create("cmd", ["/C", exePath, GAME_ARGS], { cwd: gameDir });
 
       console.log("Launching PlugY.exe from", gameDir);
       await command.spawn();
