@@ -5,6 +5,7 @@ import {
   saveSettings,
 } from "../util/settings";
 import { LauncherSettings } from "../types/settings";
+import { DEFAULT_LAUNCH_ARGUMENTS } from "../util/launchArguments";
 import { syncSavePathToGameSettings } from "../util/syncSavePath";
 import { join } from "@tauri-apps/api/path";
 
@@ -24,6 +25,7 @@ const defaultSettings: LauncherSettings = {
     saveDirectory: "",
     plugyPath: "",
     disableAutomaticUpdates: false,
+    launchArguments: DEFAULT_LAUNCH_ARGUMENTS,
   },
   linux: {
     winePrefix: "",

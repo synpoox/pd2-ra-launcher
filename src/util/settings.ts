@@ -2,6 +2,7 @@ import { mkdir, readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import { exists, BaseDirectory } from "@tauri-apps/plugin-fs";
 import { appConfigDir, join } from "@tauri-apps/api/path";
 import { LauncherSettings } from "../types/settings";
+import { DEFAULT_LAUNCH_ARGUMENTS } from "./launchArguments";
 
 const FILENAME = "settings.json";
 
@@ -11,6 +12,7 @@ const defaultSettings: LauncherSettings = {
     saveDirectory: "",
     plugyPath: "",
     disableAutomaticUpdates: false,
+    launchArguments: DEFAULT_LAUNCH_ARGUMENTS,
   },
   linux: {
     winePrefix: "",

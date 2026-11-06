@@ -8,6 +8,7 @@ import { syncSavePathToGameSettings } from "../util/syncSavePath";
 import { useEffect } from "react";
 import { LauncherSettings } from "../types/settings";
 import { loadSavePathFromGameSettings } from "../util/loadSavePathFromGameSettings";
+import { DEFAULT_LAUNCH_ARGUMENTS, parseLaunchArguments } from "../util/launchArguments";
 
 function PreferencesTab() {
   const { settings, setSettings } = useSettings();
@@ -46,6 +47,19 @@ function PreferencesTab() {
   const gameDir = settings.preferences.gameDirectory;
   const saveDir = settings.preferences.saveDirectory;
 
+  const launchArguments = settings.preferences.launchArguments ?? DEFAULT_LAUNCH_ARGUMENTS;
+  let launchArgumentsError = "";
+  try {
+    parseLaunchArguments(launchArguments);
+  } catch (err) {
+    launchArgumentsError = (err as Error).message;
+  }
+  const setLaunchArguments = (value: string) =>
+    setSettings((prev) => ({
+      ...prev,
+      preferences: { ...prev.preferences, launchArguments: value },
+    }));
+
   const handleOpenDirectory = async (dir: string) => {
     if (dir) {
       await openPath(dir);
@@ -72,8 +86,8 @@ function PreferencesTab() {
   };
 
   return (
-    <div className="flex flex-col gap-10">
-      <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-3">
         <p className="text-white/80 font-semibold text-xl">
           Project Diablo II Installation Directory
         </p>
@@ -99,13 +113,9 @@ function PreferencesTab() {
           </Button>
         </Group>
 
-        <p className="text-white/80">
-          Please select the folder containing your Project Diablo II
-          installation.
-        </p>
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3">
         <p className="text-white/80 font-semibold text-xl">
           Save Folder Directory
         </p>
@@ -134,15 +144,10 @@ function PreferencesTab() {
             Change directory
           </Button>
         </Group>
-        {settings.preferences.gameDirectory === "" ? (
+        {settings.preferences.gameDirectory === "" && (
           <p className="text-white/80">
             Please select your Project Diablo II installation directory before
             setting your Save Folder directory.
-          </p>
-        ) : (
-          <p className="text-white/80">
-            Please select the folder containing your character and stash save
-            files.
           </p>
         )}
          {/* <div className="pt-4">
@@ -173,6 +178,35 @@ function PreferencesTab() {
             Checking this option will prevent your game from updating when clicking the Play button.
           </p>
         </div> */}
+      </div>
+
+      <div className="flex flex-col gap-3">
+        <p className="text-white/80 font-semibold text-xl">Launch Arguments</p>
+        <input
+          type="text"
+          value={launchArguments}
+          spellCheck={false}
+          onChange={(e) => setLaunchArguments(e.target.value)}
+          className="w-200 px-3 py-2 bg-black/40 text-white rounded border-2 border-black/20 text-sm focus:outline-none focus:border-white/30"
+        />
+
+        <Group gap="sm">
+          <Button
+            disabled={launchArguments === DEFAULT_LAUNCH_ARGUMENTS}
+            onClick={() => setLaunchArguments(DEFAULT_LAUNCH_ARGUMENTS)}
+          >
+            Reset to default
+          </Button>
+        </Group>
+
+        {launchArgumentsError ? (
+          <p className="text-red-300">{launchArgumentsError}</p>
+        ) : (
+          <p className="text-white/80">
+            Passed to the game on Play, before PlugY.ini's Param. Default:{" "}
+            <code>{DEFAULT_LAUNCH_ARGUMENTS}</code> (-plugy is needed on S14).
+          </p>
+        )}
       </div>
     </div>
   );

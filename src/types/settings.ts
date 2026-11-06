@@ -4,6 +4,7 @@ export type LauncherSettings = {
     saveDirectory: string;
     plugyPath: string;
     disableAutomaticUpdates: boolean;
+    launchArguments?: string; // missing in settings saved before 2.4.1
   };
   linux: {
     winePrefix: string;
