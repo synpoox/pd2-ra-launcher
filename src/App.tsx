@@ -11,7 +11,8 @@ import { useAutoUpdater } from "./hooks/useAutoUpdater";
 import { useEffect } from "react";
 
 function App() {
-  const { status, updateInfo, installUpdate } = useAutoUpdater();
+  const updater = useAutoUpdater();
+  const { status, updateInfo, installUpdate } = updater;
   const [opened, { open, close }] = useDisclosure(false);
 
   useEffect(() => {
@@ -32,7 +33,7 @@ function App() {
 
   return (
     <MantineProvider>
-      <SettingsModal opened={opened} close={close} />
+      <SettingsModal opened={opened} close={close} updater={updater} />
 
       <div className="relative w-screen h-screen flex flex-col text-black">
         <div className="absolute inset-0 overflow-hidden z-0">

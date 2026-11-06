@@ -64,6 +64,14 @@
         }
       ]
     },
-    "upload:default"
+    "upload:default",
+    {
+      "identifier": "http:default",
+      "allow": [
+        { "url": "https://github.com/synpoox/pd2-reawakening/releases/*" },
+        { "url": "https://release-assets.githubusercontent.com/*" },
+        { "url": "https://objects.githubusercontent.com/*" }
+      ]
+    }
   ]
 }

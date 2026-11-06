@@ -11,6 +11,7 @@ import {
 import { ensureSettingsFile } from "../util/settings";
 import { useSettings } from "../hooks/useSettings";
 import AboutTab from "./AboutTab";
+import { AutoUpdater } from "../hooks/useAutoUpdater";
 import PreferencesTab from "./PreferencesTab";
 import Button from "./Button";
 import GameTab from "./GameTab";
@@ -19,6 +20,7 @@ import LinuxTab from "./LinuxTab";
 type SettingsModalType = {
   opened: boolean;
   close: () => void;
+  updater: AutoUpdater;
 };
 
 const iconClass =
@@ -31,7 +33,7 @@ const tabs = [
   { label: "About", icon: IconInfoCircleFilled },
 ];
 
-function SettingsModal({ opened, close }: SettingsModalType) {
+function SettingsModal({ opened, close, updater }: SettingsModalType) {
   const [activeTab, setActiveTab] = useState("Preferences");
   const { settings } = useSettings();
 
@@ -131,7 +133,7 @@ function SettingsModal({ opened, close }: SettingsModalType) {
             {activeTab === "Preferences" && settings && <PreferencesTab />}
             {activeTab === "Linux" && settings && <LinuxTab />}
             {activeTab === "Game" && settings && <GameTab />}
-            {activeTab === "About" && settings && <AboutTab />}
+            {activeTab === "About" && settings && <AboutTab updater={updater} />}
           </div>
         </div>
       </div>

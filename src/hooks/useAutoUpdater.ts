@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { check, Update } from "@tauri-apps/plugin-updater";
+import { relaunch } from "@tauri-apps/plugin-process";
 
 type UpdateStatus =
   | "idle"
@@ -11,6 +12,9 @@ type UpdateStatus =
   | "no-update"
   | "finished";
 
+export type AutoUpdater = ReturnType<typeof useAutoUpdater>;
+
+// Call once (in App): every call checks on mount and keeps its own state.
 export function useAutoUpdater() {
   const [status, setStatus] = useState<UpdateStatus>("idle");
   const [updateInfo, setUpdateInfo] = useState<Update | null>(null);
@@ -25,17 +29,13 @@ export function useAutoUpdater() {
     setTotalBytes(null);
 
     try {
-      const update = await check(); // throws if no update
+      const update = await check(); // null when already up to date
       setUpdateInfo(update);
-      setStatus("available");
-    } catch (err: any) {
-      if (err?.type === "NoUpdate") {
-        setStatus("no-update");
-      } else {
-        console.error("Update check failed:", err);
-        setError("Failed to check for updates");
-        setStatus("error");
-      }
+      setStatus(update ? "available" : "no-update");
+    } catch (err) {
+      console.error("Update check failed:", err);
+      setError("Failed to check for updates");
+      setStatus("error");
     }
   }, []);
 
@@ -61,8 +61,9 @@ export function useAutoUpdater() {
         }
       });
 
-      await updateInfo.install(); // restarts app
+      await updateInfo.install();
       setStatus("finished");
+      await relaunch(); // Windows exits into the installer; Linux needs the restart
     } catch (err) {
       console.error("Update install failed:", err);
       setError("Failed to install update");
