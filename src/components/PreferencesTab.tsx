@@ -86,8 +86,8 @@ function PreferencesTab() {
   };
 
   return (
-    <div className="flex flex-col gap-10">
-      <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-3">
         <p className="text-white/80 font-semibold text-xl">
           Project Diablo II Installation Directory
         </p>
@@ -113,13 +113,9 @@ function PreferencesTab() {
           </Button>
         </Group>
 
-        <p className="text-white/80">
-          Please select the folder containing your Project Diablo II
-          installation.
-        </p>
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3">
         <p className="text-white/80 font-semibold text-xl">
           Save Folder Directory
         </p>
@@ -148,15 +144,10 @@ function PreferencesTab() {
             Change directory
           </Button>
         </Group>
-        {settings.preferences.gameDirectory === "" ? (
+        {settings.preferences.gameDirectory === "" && (
           <p className="text-white/80">
             Please select your Project Diablo II installation directory before
             setting your Save Folder directory.
-          </p>
-        ) : (
-          <p className="text-white/80">
-            Please select the folder containing your character and stash save
-            files.
           </p>
         )}
          {/* <div className="pt-4">
@@ -189,7 +180,7 @@ function PreferencesTab() {
         </div> */}
       </div>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-3">
         <p className="text-white/80 font-semibold text-xl">Launch Arguments</p>
         <input
           type="text"
@@ -209,7 +200,7 @@ function PreferencesTab() {
         </Group>
 
         {launchArgumentsError ? (
-          <p className="text-red-300 whitespace-pre-line">{launchArgumentsError}</p>
+          <p className="text-red-300">{launchArgumentsError}</p>
         ) : (
           <p className="text-white/80">
             Passed to the game on Play, before PlugY.ini's Param. Default:{" "}
