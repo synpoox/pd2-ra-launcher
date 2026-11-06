@@ -78,14 +78,14 @@ function Play() {
       const wineCommand = () => {
         return "cd '"+gameDir+"' && "
         +(wineDir ? 'WINEPREFIX=\''+wineDir+'\' ' : '')
-        +(wineBin ? '\''+wineBin+'/wine\'' : 'wine')+" './PlugY.exe' "+GAME_ARGS;
+        +(wineBin ? '\''+wineBin+'/wine\'' : 'wine')+" './PlugY.exe' "+GAME_ARGS.join(" ");
       }
       //console.log(wineCommand());
 
       // Run bash command if your current platform is not Windows
       const command = currentPlatform !== "windows" ? 
         Command.create("bash", ["-c", wineCommand()], { cwd: gameDir }) :
-        Command.create("cmd", ["/C", exePath, GAME_ARGS], { cwd: gameDir });
+        Command.create("cmd", ["/C", exePath, ...GAME_ARGS], { cwd: gameDir });
 
       console.log("Launching PlugY.exe from", gameDir);
       await command.spawn();
