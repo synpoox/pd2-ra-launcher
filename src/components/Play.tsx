@@ -8,7 +8,8 @@ import { syncAllFromSettings } from "../util/fileSync";
 import { loadSettings } from "../util/settings";
 import { Modal } from "@mantine/core";
 import Button from "./Button";
-import { GAME_ARGS, MANIFEST_URL } from "../constants";
+import { MANIFEST_URL } from "../constants";
+import { parseLaunchArguments } from "../util/launchArguments";
 
 function Play() {
   const { settings, loaded } = useSettings();
@@ -37,6 +38,8 @@ function Play() {
       console.log("Using gameDirectory:", gameDir);
       console.log("currentPlatform:", currentPlatform);
 
+      // PlugY.exe passes these on to the game; throws (shown in the error dialog) on unsafe input.
+      const gameArgs = parseLaunchArguments(loadedSettings.preferences.launchArguments);
       // if (!loadedSettings.preferences.disableAutomaticUpdates)
       await syncAllFromSettings(MANIFEST_URL, loadedSettings);
       setLabel("Launching...");
@@ -78,14 +81,14 @@ function Play() {
       const wineCommand = () => {
         return "cd '"+gameDir+"' && "
         +(wineDir ? 'WINEPREFIX=\''+wineDir+'\' ' : '')
-        +(wineBin ? '\''+wineBin+'/wine\'' : 'wine')+" './PlugY.exe' "+GAME_ARGS.join(" ");
+        +(wineBin ? '\''+wineBin+'/wine\'' : 'wine')+" './PlugY.exe' "+gameArgs.join(" ");
       }
       //console.log(wineCommand());
 
       // Run bash command if your current platform is not Windows
       const command = currentPlatform !== "windows" ? 
         Command.create("bash", ["-c", wineCommand()], { cwd: gameDir }) :
-        Command.create("cmd", ["/C", exePath, ...GAME_ARGS], { cwd: gameDir });
+        Command.create("cmd", ["/C", exePath, ...gameArgs], { cwd: gameDir });
 
       console.log("Launching PlugY.exe from", gameDir);
       await command.spawn();
