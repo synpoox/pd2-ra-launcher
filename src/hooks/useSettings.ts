@@ -26,6 +26,7 @@ const defaultSettings: LauncherSettings = {
     plugyPath: "",
     disableAutomaticUpdates: false,
     launchArguments: DEFAULT_LAUNCH_ARGUMENTS,
+    launchWithPlugY: false,
   },
   linux: {
     winePrefix: "",

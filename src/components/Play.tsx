@@ -9,7 +9,7 @@ import { loadSettings } from "../util/settings";
 import { Modal } from "@mantine/core";
 import Button from "./Button";
 import { MANIFEST_URL } from "../constants";
-import { parseLaunchArguments } from "../util/launchArguments";
+import { launchCommand } from "../util/launchArguments";
 
 function Play() {
   const { settings, loaded } = useSettings();
@@ -38,22 +38,28 @@ function Play() {
       console.log("Using gameDirectory:", gameDir);
       console.log("currentPlatform:", currentPlatform);
 
-      // PlugY.exe passes these on to the game; throws (shown in the error dialog) on unsafe input.
-      const gameArgs = parseLaunchArguments(loadedSettings.preferences.launchArguments);
+      // Throws (shown in the error dialog) on unsafe input.
+      const { exe, args: gameArgs } = launchCommand(
+        loadedSettings.preferences.launchArguments,
+        loadedSettings.preferences.launchWithPlugY
+      );
       // if (!loadedSettings.preferences.disableAutomaticUpdates)
       await syncAllFromSettings(MANIFEST_URL, loadedSettings);
       setLabel("Launching...");
       if (!gameDir) throw new Error("Game directory not set");
 
-      const exePath = await join(gameDir, "PlugY.exe");
+      const exePath = await join(gameDir, exe);
       const existsAtPath = await exists(exePath);
 
-      console.log("Does PlugY.exe exist at path?", exePath, existsAtPath);
+      console.log(`Does ${exe} exist at path?`, exePath, existsAtPath);
 
       if (!existsAtPath) {
         // Show modal with error message instead of throwing
         setErrorMessage(
-          `PlugY.exe was not found at the expected path:\n\n"${exePath}"\n\nPlease ensure PlugY is installed inside your ProjectD2 directory.`
+          `${exe} was not found at the expected path:\n\n"${exePath}"\n\n` +
+            (exe === "PlugY.exe"
+              ? "Please ensure PlugY is installed inside your ProjectD2 directory, or turn off Launch with PlugY in Preferences."
+              : "Please check your Project Diablo II installation directory in Preferences.")
         );
 
         setErrorModalOpen(true);
@@ -81,7 +87,7 @@ function Play() {
       const wineCommand = () => {
         return "cd '"+gameDir+"' && "
         +(wineDir ? 'WINEPREFIX=\''+wineDir+'\' ' : '')
-        +(wineBin ? '\''+wineBin+'/wine\'' : 'wine')+" './PlugY.exe' "+gameArgs.join(" ");
+        +(wineBin ? '\''+wineBin+'/wine\'' : 'wine')+" './"+exe+"' "+gameArgs.join(" ");
       }
       //console.log(wineCommand());
 
@@ -90,11 +96,11 @@ function Play() {
         Command.create("bash", ["-c", wineCommand()], { cwd: gameDir }) :
         Command.create("cmd", ["/C", exePath, ...gameArgs], { cwd: gameDir });
 
-      console.log("Launching PlugY.exe from", gameDir);
+      console.log(`Launching ${exe} from`, gameDir);
       await command.spawn();
-      console.log("Successfully launched PlugY.exe");
+      console.log(`Successfully launched ${exe}`);
     } catch (error) {
-      console.error("Failed to launch PlugY.exe:", error);
+      console.error("Failed to launch:", error);
       setErrorMessage(
         `An error occurred while launching:\n\n${
           error instanceof Error ? error.message : String(error)

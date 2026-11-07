@@ -5,6 +5,7 @@ export type LauncherSettings = {
     plugyPath: string;
     disableAutomaticUpdates: boolean;
     launchArguments?: string; // missing in settings saved before 2.4.1
+    launchWithPlugY?: boolean; // missing in older settings; off/missing = Game.exe
   };
   linux: {
     winePrefix: string;
