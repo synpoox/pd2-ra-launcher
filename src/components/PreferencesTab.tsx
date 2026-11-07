@@ -8,7 +8,11 @@ import { syncSavePathToGameSettings } from "../util/syncSavePath";
 import { useEffect } from "react";
 import { LauncherSettings } from "../types/settings";
 import { loadSavePathFromGameSettings } from "../util/loadSavePathFromGameSettings";
-import { DEFAULT_LAUNCH_ARGUMENTS, parseLaunchArguments } from "../util/launchArguments";
+import {
+  DEFAULT_LAUNCH_ARGUMENTS,
+  launchArgumentsSetting,
+  parseLaunchArguments,
+} from "../util/launchArguments";
 
 function PreferencesTab() {
   const { settings, setSettings } = useSettings();
@@ -47,7 +51,8 @@ function PreferencesTab() {
   const gameDir = settings.preferences.gameDirectory;
   const saveDir = settings.preferences.saveDirectory;
 
-  const launchArguments = settings.preferences.launchArguments ?? DEFAULT_LAUNCH_ARGUMENTS;
+  const launchArguments = launchArgumentsSetting(settings.preferences.launchArguments);
+  const launchWithPlugY = settings.preferences.launchWithPlugY ?? false;
   let launchArgumentsError = "";
   try {
     parseLaunchArguments(launchArguments);
@@ -190,21 +195,40 @@ function PreferencesTab() {
           className="w-200 px-3 py-2 bg-black/40 text-white rounded border-2 border-black/20 text-sm focus:outline-none focus:border-white/30"
         />
 
-        <Group gap="sm">
+        <Group gap="lg">
           <Button
             disabled={launchArguments === DEFAULT_LAUNCH_ARGUMENTS}
             onClick={() => setLaunchArguments(DEFAULT_LAUNCH_ARGUMENTS)}
           >
             Reset to default
           </Button>
+          <div className="flex items-center gap-3">
+            <input
+              type="checkbox"
+              id="launch-with-plugy"
+              checked={launchWithPlugY}
+              onChange={(e) =>
+                setSettings((prev) => ({
+                  ...prev,
+                  preferences: { ...prev.preferences, launchWithPlugY: e.target.checked },
+                }))
+              }
+              className="scale-125"
+            />
+            <label htmlFor="launch-with-plugy" className="font-semibold text-white/80 text-lg">
+              Launch with PlugY
+            </label>
+          </div>
         </Group>
 
         {launchArgumentsError ? (
           <p className="text-red-300">{launchArgumentsError}</p>
         ) : (
           <p className="text-white/80">
-            Passed to the game on Play, before PlugY.ini's Param. Default:{" "}
-            <code>{DEFAULT_LAUNCH_ARGUMENTS}</code> (-plugy is needed on S14).
+            Passed to the game on Play. Default: <code>{DEFAULT_LAUNCH_ARGUMENTS}</code>
+            {launchWithPlugY
+              ? ". Starts PlugY.exe, adding -plugy (needed on S14) before PlugY.ini's Param."
+              : ". Starts Game.exe."}
           </p>
         )}
       </div>
